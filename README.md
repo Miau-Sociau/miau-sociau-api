@@ -33,7 +33,7 @@ Antes de rodar o projeto, configure o banco de dados **PostgreSQL**. Se estiver 
 docker run --name miausocial-db -e POSTGRES_DB=miausocial -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=admin -p 5432:5432 -d postgres
 ```
 
-Caso prefira configurar manualmente, ajuste o `application.properties` ou `application.yml` com as credenciais corretas.
+Caso prefira configurar manualmente, ajuste o `application.yml` com as credenciais corretas.
 
 ## ▶️ Como Rodar o Projeto
 
