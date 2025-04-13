@@ -1,5 +1,6 @@
 package br.com.miausocial.core.post.domain;
 
+import br.com.miausocial.types.Image;
 import br.com.miausocial.types.Location;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class PostForm {
 
     private String title;
     private String body;
-    private List<String> imageUrl;
+    private List<Image> imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Location location;

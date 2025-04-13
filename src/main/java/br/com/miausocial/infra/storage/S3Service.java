@@ -1,4 +1,5 @@
 package br.com.miausocial.infra.storage;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
@@ -13,6 +14,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
+@Profile("Prod")
 public class S3Service implements StorageService {
     private final S3Client s3Client;
     private final String bucketName = "test-bucket";

@@ -19,7 +19,7 @@ import java.util.UUID;
 import static br.com.miausocial.core.user.repo.spec.Spec.findByUsernameOrEmail;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final JwtUtil jwtUtil;

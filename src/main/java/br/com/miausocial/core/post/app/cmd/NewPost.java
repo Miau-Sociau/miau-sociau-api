@@ -1,22 +1,30 @@
 package br.com.miausocial.core.post.app.cmd;
 
-import br.com.miausocial.types.Location;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @Getter
+@Data
 public class NewPost {
 
     private String title;
     private String body;
-    private final List<String> imageUrl = new ArrayList<>();
-    private Location location;
+    @Nullable
+    private List<String> imgsUrls;
+    private double latitude;
+    private double longitude;
+    private String address;
 
     public void addImgsUrls(List<String> imageUrls) {
-        this.imageUrl.addAll(imageUrls);
+        if (imageUrls == null) return;
+        if (this.imgsUrls == null){
+            this.imgsUrls = imageUrls;
+            return;
+        }
+            this.imgsUrls.addAll(imageUrls);
     }
 
 }
