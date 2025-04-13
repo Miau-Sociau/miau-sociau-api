@@ -15,7 +15,8 @@ Bem-vindo ao **MiauSocial**! Este é um projeto desenvolvido em **Spring Boot** 
 ```sh
 # Via HTTPS
 git clone https://github.com/existencialistaP/miausocial.git
-
+```
+```
 # Via SSH
 git clone git@github.com:existencialistaP/miausocial.git
 ```
