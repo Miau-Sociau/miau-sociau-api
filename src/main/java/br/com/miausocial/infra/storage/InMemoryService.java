@@ -1,5 +1,6 @@
 package br.com.miausocial.infra.storage;
 
+import br.com.miausocial.core.imgs.port.StoragePort;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 @Profile("Dev")
-public class InMemoryService implements StorageService {
+public class InMemoryService implements StoragePort {
 
     private final Map<String, byte[]> storage = new ConcurrentHashMap<>();
 

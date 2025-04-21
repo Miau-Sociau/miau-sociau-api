@@ -1,8 +1,8 @@
-package br.com.miausocial.infra.storage;
+package br.com.miausocial.core.imgs.port;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public interface StorageService {
+public interface StoragePort {
     byte[] getFileBytes(String key);
     String uploadFile(MultipartFile file);
 }

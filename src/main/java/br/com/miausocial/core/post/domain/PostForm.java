@@ -1,7 +1,7 @@
 package br.com.miausocial.core.post.domain;
 
-import br.com.miausocial.types.Image;
-import br.com.miausocial.types.Location;
+import br.com.miausocial.shared.Image;
+import br.com.miausocial.shared.Location;
 import lombok.*;
 
 import java.time.LocalDateTime;

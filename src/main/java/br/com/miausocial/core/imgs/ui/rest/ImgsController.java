@@ -1,6 +1,6 @@
-package br.com.miausocial.infra.imgs.ui.rest;
+package br.com.miausocial.core.imgs.ui.rest;
 
-import br.com.miausocial.infra.imgs.app.ImgsService;
+import br.com.miausocial.core.imgs.app.ImgsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
