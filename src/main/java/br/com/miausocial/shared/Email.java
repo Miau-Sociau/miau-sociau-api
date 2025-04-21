@@ -1,4 +1,4 @@
-package br.com.miausocial.types;
+package br.com.miausocial.shared;
 
 import br.com.miausocial.infra.ddd.ValueObject;
 import jakarta.persistence.Embeddable;

@@ -1,6 +1,6 @@
-package br.com.miausocial.infra.imgs.app;
+package br.com.miausocial.core.imgs.app;
 
-import br.com.miausocial.infra.storage.StorageService;
+import br.com.miausocial.core.imgs.port.StoragePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,17 +12,16 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImgsService {
 
-    private final StorageService storageService;
-
+    private final StoragePort storage;
     public List<String> uploadImages(List<MultipartFile> images) {
         if (images == null || images.isEmpty()) return List.of();
 
         return images.stream()
-                .map(storageService::uploadFile)
+                .map(storage::uploadFile)
                 .collect(Collectors.toList());
     }
 
     public byte[] getImageBytes(String key) {
-        return storageService.getFileBytes(key);
+        return storage.getFileBytes(key);
     }
 }

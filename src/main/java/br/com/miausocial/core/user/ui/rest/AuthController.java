@@ -1,6 +1,7 @@
-package br.com.miausocial.infra.auth.ui.rest;
-
+package br.com.miausocial.core.user.ui.rest;
+import br.com.miausocial.shared.ErrorResponse;
 import br.com.miausocial.core.user.app.UserService;
+import br.com.miausocial.core.user.app.cmd.LoginCredentials;
 import br.com.miausocial.core.user.app.cmd.NewUser;
 import br.com.miausocial.core.user.domain.AppUser;
 import br.com.miausocial.core.user.repo.UserRepository;
@@ -44,17 +45,21 @@ public class AuthController {
 
         return ResponseEntity.ok(id);
     }
-
     @PostMapping("/signing")
-    public ResponseEntity<?> login(@RequestParam String login, @RequestParam String password) {
-        Optional<AppUser> userOptional = userRepository.findOne(findByUsernameOrEmail(login));
+    public ResponseEntity<?> login(@RequestBody @NonNull LoginCredentials cmd) {
+        Optional<AppUser> userOptional = userRepository.findOne(findByUsernameOrEmail(cmd.getEmail()));
 
         if (userOptional.isEmpty()) {
-            return ResponseEntity.status(401).body("Usuário não encontrado!");
+            return ResponseEntity.status(401)
+                    .body(new ErrorResponse("Usuário não encontrado!", 401));
         }
+
         AppUser user = userOptional.get();
 
-        if(!passwordEncoder.matches(password, user.getPassword())) return ResponseEntity.status(401).body("Senha incorreta!");
+        if (!passwordEncoder.matches(cmd.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(401)
+                    .body(new ErrorResponse("Senha incorreta!", 401));
+        }
 
         return ResponseEntity.ok(jwtUtil.generateToken(user));
     }

@@ -3,7 +3,7 @@ package br.com.miausocial.core.user.app;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
-import br.com.miausocial.types.Email;
+import br.com.miausocial.shared.Email;
 import lombok.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,8 +1,8 @@
 package br.com.miausocial.core.post.domain;
 
 import br.com.miausocial.infra.ddd.AbstractEntity;
-import br.com.miausocial.types.Location;
-import br.com.miausocial.types.Image;
+import br.com.miausocial.shared.Location;
+import br.com.miausocial.shared.Image;
 import jakarta.persistence.*;
 import lombok.*;
 

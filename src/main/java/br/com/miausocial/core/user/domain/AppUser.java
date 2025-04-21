@@ -1,7 +1,7 @@
 package br.com.miausocial.core.user.domain;
 
 import br.com.miausocial.infra.ddd.AbstractAggregateRoot;
-import br.com.miausocial.types.Email;
+import br.com.miausocial.shared.Email;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import lombok.*;
