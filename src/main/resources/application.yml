@@ -1,7 +1,61 @@
 spring:
   profiles:
-    default: Dev
-    active: Dev
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+app:
+  security:
+    jwt-secret: ${JWT_SECRET:your-256-bit-secret-key-here-for-development-only}
+    jwt-expiration-ms: 86400000  # 24 hours
+    jwt-refresh-expiration-ms: 604800000  # 7 days
+  storage:
+    bucket-name: ${AWS_BUCKET_NAME:dev-bucket}
+    region: ${AWS_REGION:sa-east-1}
+    access-key: ${AWS_ACCESS_KEY:dev-access-key}
+    secret-key: ${AWS_SECRET_KEY:dev-secret-key}
+  cors:
+    allowed-origins:
+      - http://localhost:4321
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+app:
+  security:
+    jwt-secret: ${JWT_SECRET}
+    jwt-expiration-ms: 86400000  # 24 hours
+    jwt-refresh-expiration-ms: 604800000  # 7 days
+  storage:
+    bucket-name: ${AWS_BUCKET_NAME}
+    region: ${AWS_REGION}
+    access-key: ${AWS_ACCESS_KEY}
+    secret-key: ${AWS_SECRET_KEY}
+  cors:
+    allowed-origins:
+      - https://miausocial.com
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+
   datasource:
     url: jdbc:postgresql://postgres:5433/miausocial
     username: admin

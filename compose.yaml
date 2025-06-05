@@ -14,18 +14,32 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - miaunet
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d miausocial"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   springboot-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: miausociau-app
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
+      SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/miausocial
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: senhasegura123
+      JWT_SECRET: your-256-bit-secret-key-here-for-development-only
+      AWS_BUCKET_NAME: dev-bucket
+      AWS_REGION: sa-east-1
+      AWS_ACCESS_KEY: dev-access-key
+      AWS_SECRET_KEY: dev-secret-key
     networks:
       - miaunet
 
@@ -40,6 +54,11 @@ services:
       - "27017:27017"
     networks:
       - miaunet
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
@@ -48,6 +67,11 @@ services:
       - "6379:6379"
     networks:
       - miaunet
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

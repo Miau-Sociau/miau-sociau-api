@@ -4,12 +4,10 @@ import br.com.miausocial.infra.ddd.ValueObject;
 import jakarta.persistence.Embeddable;
 import lombok.*;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PUBLIC;
-
 
 @Getter
 @ToString
@@ -19,24 +17,26 @@ import static lombok.AccessLevel.PUBLIC;
 @AllArgsConstructor(access = PRIVATE)
 public final class Email implements ValueObject {
 
-    public static Email EMPTY = new Email("");
+    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@(.+)$";
+    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     private String email;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
-                    "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-
-    private static boolean isValidEmail(String email) {
-        Matcher matcher = EMAIL_PATTERN.matcher(email);
-        return matcher.matches();
-    }
-
-    public static Email of(String email) throws Exception {
-        if (isValidEmail(email)) {
-            return new Email(email);
+    public static Email of(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("Email não pode ser nulo ou vazio");
         }
 
-        throw new Exception("Email não pode estar vazio;");
+        String trimmedEmail = email.trim().toLowerCase();
+        if (!EMAIL_PATTERN.matcher(trimmedEmail).matches()) {
+            throw new IllegalArgumentException("Email inválido: " + email);
+        }
+
+        return new Email(trimmedEmail);
+    }
+
+    @Override
+    public String toString() {
+        return email;
     }
 }
