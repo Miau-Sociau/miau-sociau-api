@@ -15,12 +15,9 @@ import java.util.function.Consumer;
 public class PostForm {
     private final Consumer<PostForm> action;
 
-
     private String title;
     private String body;
     private List<Image> imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private Location location;
 
     public void apply() {

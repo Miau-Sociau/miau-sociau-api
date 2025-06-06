@@ -22,8 +22,6 @@ public class Post extends AbstractEntity<UUID> {
     @ElementCollection
     @CollectionTable(name = "post_images", joinColumns = @JoinColumn(name = "post_id"))
     private  List<Image> imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     @Embedded
     private Location location;
 
@@ -37,12 +35,8 @@ public class Post extends AbstractEntity<UUID> {
         this.title = title;
         this.body = body;
         this.imageUrl = imageUrl;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
         this.location = location;
-
     }
-
 
     public PostForm update(){
         return new PostForm( (form) ->{
@@ -50,10 +44,7 @@ public class Post extends AbstractEntity<UUID> {
             this.body = form.getBody();
             this.imageUrl.clear();
             this.imageUrl = form.getImageUrl();
-            this.updatedAt = LocalDateTime.now();
             this.location = form.getLocation();
-
         });
     }
-
 }
