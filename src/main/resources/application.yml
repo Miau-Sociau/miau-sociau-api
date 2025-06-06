@@ -1,9 +1,9 @@
 spring:
   profiles:
-    default: Dev
-    active: Dev
+    default: dev
+    active: dev
   datasource:
-    url: jdbc:postgresql://postgres:5433/miausocial
+    url: jdbc:postgresql://localhost:5433/miausocial
     username: admin
     password: senhasegura123
     driver-class-name: org.postgresql.Driver
@@ -14,6 +14,10 @@ spring:
     hibernate:
       format_sql: true
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
   springdoc:
     api-docs:
       path:
@@ -21,3 +25,19 @@ spring:
     swagger-ui:
       path:
         /swagger-ui.html
+  data:
+    mongodb:
+      host: mongodb
+      port: 27017
+      database: mydatabase
+      username: root
+      password: secret
+      authentication-database: admin
+  redis:
+    host: redis
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: false

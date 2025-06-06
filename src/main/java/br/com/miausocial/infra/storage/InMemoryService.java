@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-@Profile("Dev")
+@Profile("dev")
 public class InMemoryService implements StoragePort {
 
     private final Map<String, byte[]> storage = new ConcurrentHashMap<>();

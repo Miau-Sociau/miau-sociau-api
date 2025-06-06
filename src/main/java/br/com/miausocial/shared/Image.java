@@ -20,12 +20,8 @@ import static lombok.AccessLevel.PUBLIC;
 public class Image implements ValueObject {
     @NonNull
     private String url;
-    @NonNull
-    private LocalDateTime createdAt;
 
     public static Image of(String url) {
-        return new Image(url, LocalDateTime.now());
+        return new Image(url);
     }
-
-
 }
