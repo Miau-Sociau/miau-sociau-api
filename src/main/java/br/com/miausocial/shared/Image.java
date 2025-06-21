@@ -5,8 +5,6 @@ import jakarta.persistence.Embeddable;
 import lombok.*;
 import lombok.NonNull;
 
-import java.time.LocalDateTime;
-
 import static lombok.AccessLevel.PRIVATE;
 import static lombok.AccessLevel.PUBLIC;
 

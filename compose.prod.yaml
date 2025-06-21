@@ -2,6 +2,7 @@ services:
   postgres:
     image: postgres:15
     container_name: miausociau-db
+    restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -9,47 +10,23 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - miaunet
-    restart: always
+      - backend
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  springboot-app:
-    build: .
-    container_name: miausociau-app
-    depends_on:
-      - postgres
-      # - mongodb
-      # - redis
-    ports:
-      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
-    networks:
-      - miaunet
-    restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   mongodb:
     image: mongo:latest
     container_name: miausociau-mongo
+    restart: always
     environment:
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     networks:
-      - miaunet
-    restart: always
+      - backend
     healthcheck:
       test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -59,19 +36,54 @@ services:
   redis:
     image: redis:latest
     container_name: miausociau-redis
-    networks:
-      - miaunet
     restart: always
+    networks:
+      - backend
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
       timeout: 10s
       retries: 5
 
+  app:
+    image: ghcr.io/seu-usuario/miausociau-backend:latest 
+    container_name: miausociau-app
+    restart: always
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE: prod
+    networks:
+      - backend
+      - frontend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: miausociau-nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./ngix/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app
+    networks:
+      - frontend
+
 volumes:
   postgres_data:
-    name: miausociau-postgres-vol
 
 networks:
-  miaunet:
-    driver: bridge
+  backend:
+  frontend:
+

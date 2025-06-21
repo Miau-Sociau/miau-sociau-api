@@ -1,6 +1,5 @@
 package br.com.miausocial.core.user.app;
 
-
 import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
 
 import br.com.miausocial.shared.Email;
@@ -8,7 +7,8 @@ import lombok.NonNull;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import br.com.miausocial.core.profile.domain.Profile;
+import br.com.miausocial.core.profile.repo.ProfileRepository;
 import br.com.miausocial.core.user.app.cmd.NewUser;
 import br.com.miausocial.core.user.domain.AppUser;
 import br.com.miausocial.core.user.repo.UserRepository;
@@ -17,31 +17,33 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+
 @Log
 @Service
 @Transactional(propagation = REQUIRES_NEW)
 public class UserService {
 
     private final UserRepository repo;
+    private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repo, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository repo, ProfileRepository profileRepository, PasswordEncoder passwordEncoder) {
         this.repo = repo;
+        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     @NonNull
     public UUID handle(NewUser cmd) throws Exception {
-
         if (repo.existsByEmail(Email.of(cmd.getEmail()))) {
             throw new IllegalArgumentException("E-mail já está em uso.");
         }
         if (repo.existsByUserName((cmd.getUserName()))) {
             throw new IllegalArgumentException("Username já está em uso.");
         }
-        try {
-        String hashedPassword = passwordEncoder.encode(cmd.getPassword());
 
+        try {
+            String hashedPassword = passwordEncoder.encode(cmd.getPassword());
 
             AppUser user = AppUser.builder()
                     .firstName(cmd.getFirstName())
@@ -51,11 +53,15 @@ public class UserService {
                     .userName(cmd.getUserName())
                     .build();
 
-            return repo.save(user).id();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+            user = repo.save(user);
 
+            Profile profile = Profile.of(user);
+            profileRepository.save(profile);
+
+            return user.id();
+        } catch (Exception e) {
+            throw new RuntimeException("Error creating user: " + e.getMessage(), e);
+        }
     }
 
     @NonNull

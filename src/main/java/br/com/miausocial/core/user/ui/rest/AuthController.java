@@ -21,6 +21,7 @@ import static br.com.miausocial.core.user.repo.spec.Spec.findByUsernameOrEmail;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     private final JwtUtil jwtUtil;
@@ -37,15 +38,18 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Cria Usuario", description = "Cria usuario.")
-    @ApiResponse(responseCode = "201", description = "registrado com sucesso", content = @Content(mediaType = "string"))
+    @ApiResponse(responseCode = "201", description = "registrado com sucesso", content = @Content(mediaType = "application/json"))
     @ApiResponse(responseCode = "400", description = "Requisição inválida")
     @ApiResponse(responseCode = "500", description = "Erro interno no servidor")
     public ResponseEntity<UUID> newUser(@RequestBody @NonNull NewUser cmd) throws Exception {
         UUID id = userService.handle(cmd);
-
         return ResponseEntity.ok(id);
     }
+
     @PostMapping("/signing")
+    @Operation(summary = "Login", description = "Realiza login do usuário.")
+    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso", content = @Content(mediaType = "application/json"))
+    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
     public ResponseEntity<?> login(@RequestBody @NonNull LoginCredentials cmd) {
         Optional<AppUser> userOptional = userRepository.findOne(findByUsernameOrEmail(cmd.getEmail()));
 

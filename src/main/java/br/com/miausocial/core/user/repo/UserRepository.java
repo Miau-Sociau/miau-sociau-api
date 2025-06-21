@@ -9,6 +9,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -16,4 +17,6 @@ public interface UserRepository extends CrudRepository<AppUser, UUID>, PagingAnd
     boolean existsByEmail(@NonNull Email email);
 
     boolean existsByUserName(@NonNull String userName);
+
+    Optional<AppUser> findByUserName(@NonNull String userName);
 }
